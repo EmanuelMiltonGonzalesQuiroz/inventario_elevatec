@@ -90,7 +90,7 @@ export const permissionTranslations = {
   clients: 'Clientes',
   profile: 'Perfil',
   roles: 'Roles',
-  // Se pueden agregar más permisos dinámicamente
+  inventory: 'Inventario',
 };
 
 

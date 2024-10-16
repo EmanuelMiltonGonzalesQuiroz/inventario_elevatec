@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight, FaUser, FaUsers} from 'react-icons/fa';
 import { CgProfile } from 'react-icons/cg';
-import { MdOutlineAdminPanelSettings } from 'react-icons/md';
+import { MdOutlineAdminPanelSettings,MdOutlineInventory } from 'react-icons/md';
 
 const Sidebar = ({ activeContent, setActiveContent, permissions }) => {
   const [isMinimized, setIsMinimized] = useState(false);
@@ -46,6 +46,7 @@ const Sidebar = ({ activeContent, setActiveContent, permissions }) => {
           {renderItem('Clientes', <FaUsers />, 'Clientes', 'clients')}
           {renderItem('Perfil', <CgProfile />, 'Perfil', 'profile')}
           {renderItem('Roles', <MdOutlineAdminPanelSettings />, 'Roles', 'roles')}
+          {renderItem('Inventario', <MdOutlineInventory />, 'Inventario', 'inventory')}
         </ul>
       </nav>
     </div>

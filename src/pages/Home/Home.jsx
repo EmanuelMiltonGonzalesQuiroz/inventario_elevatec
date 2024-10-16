@@ -4,6 +4,7 @@ import Sidebar from './Sidebar';
 import { useAuth } from '../../context/AuthContext';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../../connection/firebase';
+import Inventory from '../options/Inventory/Inventory';
 // Lazy loading for new components
 const Users = lazy(() => import('../options/Users/Users'));
 const Clients = lazy(() => import('../options/Clients/Clients'));
@@ -77,6 +78,7 @@ const Home = () => {
               {!isLoadingPermissions && permissions.users && activeContent === 'Usuarios' && <Users />}
               {!isLoadingPermissions && permissions.clients && activeContent === 'Clientes' && <Clients />}
               {!isLoadingPermissions && permissions.roles && activeContent === 'Roles' && <Roles />}
+              {!isLoadingPermissions && permissions.roles && activeContent === 'Inventario' && <Inventory />}
             </Suspense>
           </div>
         </main>
