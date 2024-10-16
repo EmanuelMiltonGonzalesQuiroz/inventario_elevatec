@@ -1,0 +1,264 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.header {
+  width: 100%;
+  text-align: center;
+  background-color: #333;
+  color: #fff;
+  padding: 10px;
+  font-size: 1.5em;
+}
+
+.open- {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background-color: #333;
+  color: #fff;
+  transform: translateX(-250px);
+  transition: transform 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  width: 100%;
+}
+
+
+
+
+/*************************************************************************\
+/* Estilos del menú lateral */
+.sidebar {
+  width: 250px;
+  background-color: #333;
+  height: 100%;
+  position: fixed;
+  top: 93px; /* Ajusta el margen superior para que inicie más abajo */
+  left: -250px; /* Ocultar el menú fuera de la pantalla */
+  transition: left 0.3s;
+  z-index: 1000;
+}
+
+.sidebar.open {
+  left: 0; /* Mostrar el menú */
+}
+
+/* Estilos de la lista en el menú */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar li {
+  margin: 10px 0;
+}
+
+.sidebar a {
+  display: flex;
+  align-items: center;
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2em;
+  padding: 10px;
+  box-sizing: border-box;
+  width: 100%;
+  transition: background-color 0.3s;
+}
+
+.sidebar a i {
+  margin-right: 10px;
+}
+
+.menu-text {
+  display: inline;
+}
+
+/* Estilos del botón para abrir el menú */
+.open-menu {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  background-color: #333;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  font-size: 1.5em;
+  z-index: 1001; /* Asegúrate de que el botón esté por encima del menú */
+}
+.close-menu {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background-color: red; /* Color de fondo del botón de cerrar sesión */
+  color: #fff;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 5px; /* Bordes redondeados */
+  font-size: 1.5em;
+  z-index: 1001; /* Asegúrate de que el botón esté por encima del menú */
+}
+
+/* Estilos del encabezado */
+.header {
+  width: 100%;
+  height: 75px; /* Altura del encabezado */
+  background-color: #000; /* Color de fondo negro */
+  color: #fff; /* Color del texto blanco */
+  display: flex;
+  align-items: center; /* Centrar el texto verticalmente */
+  justify-content: center; /* Centrar el texto horizontalmente */
+  position: fixed; /* Fijar el encabezado en la parte superior */
+  top: 0;
+  left: 0;
+  z-index: 1000; /* Asegúrate de que el encabezado esté por encima de otros elementos */
+}
+
+/**/
+
+
+/* Estilos del menú superior */
+/* Estilos generales para el menú de navegación */
+.top-nav {
+  width: 100%;
+  background-color: #444;
+  padding: 10px;
+  position: fixed;
+  top: 50%; /* Coloca el menú a mitad de la pantalla */
+  left: 0;
+  transform: translateY(-50%); /* Centra el menú verticalmente */
+  z-index: 999;
+  transition: transform 0.3s ease;
+  transform: translateY(-100%); /* Oculta el menú fuera de la vista */
+}
+
+.top-nav.open {
+  transform: translateY(0); /* Muestra el menú cuando está abierto */
+}
+
+.top-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+.top-nav li {
+  margin: 0;
+}
+
+.top-nav a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px;
+  display: block;
+  font-size: 1em;
+}
+
+/* Estilos para el botón del menú en dispositivos móviles */
+.mobile-menu-toggle {
+  display: none;
+  background-color: #444;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  font-size: 1.5em;
+  cursor: pointer;
+  position: fixed;
+  top: 96px;
+  left: 0;
+  z-index: 1000;
+  width: 440px; /* Ancho inicial del botón */
+  height: 60px; /* Altura del botón */
+  transform: translateX(-10px); /* Ajusta el botón hacia la derecha */
+}
+
+.mobile-menu-toggle.expanded {
+  width: 80px; /* Ancho expandido del botón */
+  transform: translateX(0); /* Ajusta la posición cuando está expandido */
+}
+/* Barra lateral para computadoras de escritorio */
+@media screen and (min-width: 769px) {
+  .top-nav {
+    width: 100%;
+    top: 18%;
+    left: 0;
+    transform: translateY(-50%); /* Centra el menú verticalmente */
+    height: 60px; /* Ajusta la altura del menú si es necesario */
+    flex-direction: row;
+  }
+  
+  .top-nav ul {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100%;
+  }
+  
+  .mobile-menu-toggle {
+    display: none; /* Ocultar el botón en pantallas grandes */
+  }
+}
+
+/* Menú desplegable para dispositivos móviles */
+@media screen and (max-width: 768px) {
+  .top-nav {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    top: 14.5%;
+    left: 0;
+  }
+  
+  .top-nav ul {
+    display: none; /* Oculta el menú por defecto en pantallas pequeñas */
+    flex-direction: column;
+    width: 100%;
+  }
+  
+  .top-nav.open ul {
+    display: flex;
+  }
+  
+  .mobile-menu-toggle {
+    display: block; /* Muestra el botón en pantallas pequeñas */
+  }
+}
+

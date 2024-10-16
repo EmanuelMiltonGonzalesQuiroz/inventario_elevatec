@@ -1,0 +1,7 @@
+[
+  {
+    "origin": ["http://localhost:3000", "inventario-elevatec-dd5f5.firebaseapp.com", "inventario-elevatec-dd5f5.web.app"],
+    "method": ["GET"],
+    "maxAgeSeconds": 3600
+  }
+]
