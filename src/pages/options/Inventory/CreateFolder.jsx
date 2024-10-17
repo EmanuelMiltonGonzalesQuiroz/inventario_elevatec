@@ -81,5 +81,5 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
     </div>
   );
 };
-
+ 
 export default CreateFolder;
