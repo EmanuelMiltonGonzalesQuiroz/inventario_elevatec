@@ -54,7 +54,7 @@ const UploadFile = ({ triggerUpdate, folders }) => {
         });
 
         setSelectedFile(null);
-        setSelectedFolder(''); // Restablecer la selección de la carpeta
+        setSelectedFolder(''); // Restablecer la selección de la Tipo
         triggerUpdate(); // Señalizamos la actualización
       } catch (error) {
         console.error('Error al subir el archivo:', error);
@@ -62,7 +62,7 @@ const UploadFile = ({ triggerUpdate, folders }) => {
         setIsUploading(false); // Ocultar spinner de carga
       }
     } else {
-      alert('Por favor selecciona un archivo y una carpeta.');
+      alert('Por favor selecciona un archivo y una Tipo.');
     }
   };
 
@@ -70,13 +70,13 @@ const UploadFile = ({ triggerUpdate, folders }) => {
     <div>
       <h2 className="text-xl font-bold text-black mb-4">Subir Archivos</h2>
 
-      {/* Selector de carpeta */}
+      {/* Selector de Tipo */}
       <select
         value={selectedFolder}
         onChange={(e) => setSelectedFolder(e.target.value)}
         className="mb-2 p-2 border border-gray-400 rounded w-full"
       >
-        <option value="" disabled>Seleccionar carpeta</option>
+        <option value="" disabled>Seleccionar Tipo</option>
         {folders.map((folder, index) => (
           <option key={index} value={folder.id}>
             {folder.name}

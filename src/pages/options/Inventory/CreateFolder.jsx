@@ -10,7 +10,7 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
 
   const handleCreateFolder = async () => {
     if (!newFolderName || newFolderName.trim() === '') {
-      alert('Error: El nombre de la carpeta no puede estar vacío.');
+      alert('Error: El nombre de la Tipo no puede estar vacío.');
       return;
     }
 
@@ -20,15 +20,15 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
       return;
     }
 
-    const folderPath = `${newFolderName.trim()}/.keep`; // Añadir .keep al final para simular la carpeta
+    const folderPath = `${newFolderName.trim()}/.keep`; // Añadir .keep al final para simular la Tipo
     const folderRef = ref(storage, folderPath);
     const currentDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
 
     try {
-      // Crear archivo .keep en Firebase Storage para simular una carpeta
+      // Crear archivo .keep en Firebase Storage para simular una Tipo
       await uploadBytes(folderRef, new Blob([''], { type: 'text/plain' })); // Subir archivo vacío .keep
 
-      // Obtener el siguiente ID disponible para la carpeta
+      // Obtener el siguiente ID disponible para la Tipo
       const foldersCollectionRef = collection(db, 'folders');
       const folderQuery = query(foldersCollectionRef, orderBy('idFolder', 'desc')); // Ordenar por 'idFolder'
       const folderSnapshot = await getDocs(folderQuery);
@@ -40,7 +40,7 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
         nextId = parseInt(lastId) + 1;
       }
 
-      // Crear nuevo ID de carpeta con el formato ID-FOLDER-###
+      // Crear nuevo ID de Tipo con el formato ID-FOLDER-###
       const idFolder = `ID-FOLDER-${nextId.toString().padStart(3, '0')}`;
 
       // Crear documento en Firestore
@@ -57,18 +57,18 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
       setNewFolderName(''); // Limpiar el campo de entrada
       triggerUpdate(); // Señalizamos la actualización
     } catch (error) {
-      console.error('Error al crear la carpeta:', error);
+      console.error('Error al crear la Tipo:', error);
     }
   };
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-black mb-4">Crear Nueva Carpeta</h2>
+      <h2 className="text-xl font-bold text-black mb-4">Crear Nueva Tipo</h2>
       <input
         type="text"
         value={newFolderName}
         onChange={(e) => setNewFolderName(e.target.value)}
-        placeholder="Nombre de la carpeta"
+        placeholder="Nombre de la Tipo"
         className="mb-2 p-2 border border-gray-400 rounded w-full"
       />
       <button
@@ -76,7 +76,7 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
         className="bg-blue-500 text-white px-4 py-2 rounded w-full"
         disabled={!newFolderName || !currentUser} // Deshabilitar si no hay nombre o usuario
       >
-        Crear Carpeta
+        Crear Tipo
       </button>
     </div>
   );

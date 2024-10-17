@@ -4,7 +4,7 @@ import { db } from '../../../connection/firebase';
 import { getStorage, ref, deleteObject } from 'firebase/storage';
 import { useAuth } from '../../../context/AuthContext';
 
-const FileItem = ({ file, triggerUpdate }) => {
+const FileTableActions = ({ file, folder, triggerUpdate }) => {
   const { currentUser } = useAuth();
   const storage = getStorage();
 
@@ -22,11 +22,9 @@ const FileItem = ({ file, triggerUpdate }) => {
   // Función para eliminar definitivamente el archivo
   const handlePermanentDelete = async () => {
     try {
-      // Eliminar de Firestore
       const fileRef = doc(db, 'files', file.id);
       await deleteDoc(fileRef);
 
-      // Eliminar del Storage
       const fileStorageRef = ref(storage, `${file.folder}/${file.name}`);
       await deleteObject(fileStorageRef);
 
@@ -48,38 +46,36 @@ const FileItem = ({ file, triggerUpdate }) => {
   };
 
   return (
-    <li className="text-md text-gray-700 flex justify-between items-center mb-4">
-      <span>{file.name}</span>
-      <div>
-        <a
-          href={file.url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="bg-blue-500 text-white px-2 py-1 rounded mr-4"
-        >
-          Ver Archivo
-        </a>
-        {currentUser.role === 'Gerencia' || currentUser.role === 'Administrador' ? (
-          <>
-            {file.state === 'activo' ? (
-              <button onClick={handleDelete} className="bg-red-500 text-white px-2 py-1 rounded mr-4">
-                Eliminar
+    <div>
+      {currentUser.role === 'Administrador' || currentUser.role === 'Gerencia' ? (
+        <div className="mt-2 flex flex-col space-y-2">
+          {file.state === 'activo' ? (
+            <button
+              onClick={handleDelete}
+              className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded w-full"
+            >
+              Eliminar
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={handleRecoverFile}
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded w-full"
+              >
+                Recuperar
               </button>
-            ) : (
-              <>
-                <button onClick={handleRecoverFile} className="bg-yellow-500 text-white px-2 py-1 rounded mr-4">
-                  Recuperar
-                </button>
-                <button onClick={handlePermanentDelete} className="bg-red-500 text-white px-2 py-1 rounded">
-                  Eliminar Definitivamente
-                </button>
-              </>
-            )}
-          </>
-        ) : null}
-      </div>
-    </li>
+              <button
+                onClick={handlePermanentDelete}
+                className="bg-red-700 hover:bg-red-800 text-white font-bold py-2 px-4 rounded w-full"
+              >
+                Eliminar Definitivamente
+              </button>
+            </>
+          )}
+        </div>
+      ) : null}
+    </div>
   );
 };
 
-export default FileItem;
+export default FileTableActions;

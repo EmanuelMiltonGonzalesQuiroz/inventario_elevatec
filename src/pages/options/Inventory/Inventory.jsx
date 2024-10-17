@@ -11,8 +11,8 @@ const Inventory = () => {
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [viewActive, setViewActive] = useState(true);
-  const [updateSignal, setUpdateSignal] = useState(false); // Estado para señalizar actualización
-  const [newFolderName, setNewFolderName] = useState(''); // Añadir estado para gestionar el nombre de la nueva carpeta
+  const [updateSignal, setUpdateSignal] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
   const canCreateFolders = currentUser && (currentUser.role === 'Gerencia' || currentUser.role === 'Administrador');
 
   // Función para actualizar la señal y recargar los datos
@@ -20,10 +20,10 @@ const Inventory = () => {
     setUpdateSignal(prevSignal => !prevSignal);
   };
 
-  // Función para cargar carpetas y archivos desde Firestore
+  // Función para cargar Tipos y archivos desde Firestore
   const loadDataFromDB = async () => {
     try {
-      // Obtener carpetas
+      // Obtener Tipos
       const foldersCollectionRef = collection(db, 'folders');
       const folderSnapshot = await getDocs(foldersCollectionRef);
       const folderList = folderSnapshot.docs.map(doc => ({
@@ -42,7 +42,7 @@ const Inventory = () => {
       setFolders(folderList);
       setFiles(fileList);
     } catch (error) {
-      console.error('Error al cargar carpetas y archivos:', error);
+      console.error('Error al cargar Tipos y archivos:', error);
     }
   };
 
@@ -52,12 +52,12 @@ const Inventory = () => {
   }, [updateSignal]);
 
   return (
-    <div className="p-6 bg-white shadow-md p-4 rounded text-black min-h-[85vh] max-h-[90vh]">
+    <div className="p-6 bg-white shadow-md p-4 rounded text-black min-h-[85vh] max-h-[130vh]">
       {canCreateFolders && (
         <div className="flex mb-4 gap-x-4">
           <CreateFolder 
-            newFolderName={newFolderName} // Pasar el estado del nombre de la nueva carpeta
-            setNewFolderName={setNewFolderName} // Pasar la función de actualización del nombre
+            newFolderName={newFolderName} 
+            setNewFolderName={setNewFolderName} 
             triggerUpdate={triggerUpdate} 
           />
           <UploadFile folders={folders.filter(folder => folder.state === 'activo')} triggerUpdate={triggerUpdate} />
@@ -70,18 +70,18 @@ const Inventory = () => {
             onClick={() => setViewActive(true)}
             className={`px-4 py-2 rounded ${viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
           >
-            Carpetas Activas
+            Tipos Activos
           </button>
           <button
             onClick={() => setViewActive(false)}
             className={`px-4 py-2 rounded ${!viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
           >
-            Carpetas Inactivas
+            Tipos Inactivos
           </button>
         </div>
       )}
 
-      {/* Mostrar lista de carpetas */}
+      {/* Mostrar lista de Tipos */}
       {viewActive || !canCreateFolders ? (
         <FolderList folders={folders} files={files} stateFilter="activo" triggerUpdate={triggerUpdate} />
       ) : (

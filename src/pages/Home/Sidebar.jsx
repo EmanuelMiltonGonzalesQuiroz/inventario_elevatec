@@ -46,7 +46,7 @@ const Sidebar = ({ activeContent, setActiveContent, permissions }) => {
           {renderItem('Clientes', <FaUsers />, 'Clientes', 'clients')}
           {renderItem('Perfil', <CgProfile />, 'Perfil', 'profile')}
           {renderItem('Roles', <MdOutlineAdminPanelSettings />, 'Roles', 'roles')}
-          {renderItem('Inventario', <MdOutlineInventory />, 'Inventario', 'inventory')}
+          {renderItem('Documentos', <MdOutlineInventory />, 'Inventario', 'inventory')}
         </ul>
       </nav>
     </div>
