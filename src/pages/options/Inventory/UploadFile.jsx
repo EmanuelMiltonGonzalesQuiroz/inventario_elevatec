@@ -1,41 +1,22 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db } from '../../../connection/firebase';
-import { doc, setDoc, collection, getDocs, query, orderBy, where } from 'firebase/firestore'; // Agregamos 'where' para filtrar por estado
+import { doc, setDoc, query, orderBy, getDocs, collection } from 'firebase/firestore'; // Eliminamos el uso de 'where'
 import { useAuth } from '../../../context/AuthContext'; 
 
-const UploadFile = ({ triggerUpdate }) => {
+const UploadFile = ({ triggerUpdate, folders }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [selectedFolder, setSelectedFolder] = useState('');
   const [isUploading, setIsUploading] = useState(false); // Estado para mostrar carga
-  const [activeFolders, setActiveFolders] = useState([]); // Guardar solo las carpetas activas
   const storage = getStorage();
   const { currentUser } = useAuth();
-
-  // Obtener las carpetas activas desde Firestore
-  useEffect(() => {
-    const fetchActiveFolders = async () => {
-      const foldersCollectionRef = collection(db, 'folders');
-      const q = query(foldersCollectionRef, where('state', '==', 'activo')); // Solo carpetas con estado activo
-      const querySnapshot = await getDocs(q);
-
-      const foldersList = querySnapshot.docs.map(doc => ({
-        id: doc.id, // Asegurarse de capturar el ID del folder
-        ...doc.data()
-      }));
-
-      setActiveFolders(foldersList);
-    };
-
-    fetchActiveFolders();
-  }, []);
 
   const handleFileUpload = async () => {
     if (selectedFile && selectedFolder) {
       setIsUploading(true); // Mostrar spinner de carga
 
       // Encontrar el folder seleccionado por su ID
-      const selectedFolderObj = activeFolders.find(folder => folder.id === selectedFolder);
+      const selectedFolderObj = folders.find(folder => folder.id === selectedFolder);
       const fileRef = ref(storage, `${selectedFolderObj.name}/${selectedFile.name}`);
       
       try {
@@ -96,7 +77,7 @@ const UploadFile = ({ triggerUpdate }) => {
         className="mb-2 p-2 border border-gray-400 rounded w-full"
       >
         <option value="" disabled>Seleccionar carpeta</option>
-        {activeFolders.map((folder, index) => (
+        {folders.map((folder, index) => (
           <option key={index} value={folder.id}>
             {folder.name}
           </option>

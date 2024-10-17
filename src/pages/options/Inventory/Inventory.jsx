@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FolderList from './FolderList';
 import CreateFolder from './CreateFolder';
 import UploadFile from './UploadFile';
-import { useAuth } from '../../../context/AuthContext'; 
+import { useAuth } from '../../../context/AuthContext';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../../../connection/firebase';
 
@@ -10,21 +10,30 @@ const Inventory = () => {
   const { currentUser } = useAuth();
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
-  const [newFolderName, setNewFolderName] = useState('');
-  const [updateSignal, setUpdateSignal] = useState(false);
-  const [viewActive, setViewActive] = useState(true); // Estado para alternar entre activas e inactivas
+  const [viewActive, setViewActive] = useState(true);
+  const [updateSignal, setUpdateSignal] = useState(false); // Estado para señalizar actualización
+  const [newFolderName, setNewFolderName] = useState(''); // Añadir estado para gestionar el nombre de la nueva carpeta
+  const canCreateFolders = currentUser && (currentUser.role === 'Gerencia' || currentUser.role === 'Administrador');
 
-  // Función para obtener y actualizar los datos de Firestore
-  const fetchData = async () => {
+  // Función para actualizar la señal y recargar los datos
+  const triggerUpdate = () => {
+    setUpdateSignal(prevSignal => !prevSignal);
+  };
+
+  // Función para cargar carpetas y archivos desde Firestore
+  const loadDataFromDB = async () => {
     try {
-      const folderSnapshot = await getDocs(collection(db, 'folders'));
-      const fileSnapshot = await getDocs(collection(db, 'files'));
-
+      // Obtener carpetas
+      const foldersCollectionRef = collection(db, 'folders');
+      const folderSnapshot = await getDocs(foldersCollectionRef);
       const folderList = folderSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
       }));
 
+      // Obtener archivos
+      const filesCollectionRef = collection(db, 'files');
+      const fileSnapshot = await getDocs(filesCollectionRef);
       const fileList = fileSnapshot.docs.map(doc => ({
         id: doc.id,
         ...doc.data(),
@@ -33,37 +42,28 @@ const Inventory = () => {
       setFolders(folderList);
       setFiles(fileList);
     } catch (error) {
-      console.error('Error al obtener los datos:', error);
+      console.error('Error al cargar carpetas y archivos:', error);
     }
   };
 
+  // Cargar los datos iniciales y recargarlos cuando `updateSignal` cambie
   useEffect(() => {
-    fetchData(); // Cargar los datos iniciales
+    loadDataFromDB();
   }, [updateSignal]);
-
-  const triggerUpdate = () => {
-    setUpdateSignal(prevSignal => !prevSignal);
-  };
-
-  const canCreateFolders = currentUser && (currentUser.role === 'Gerencia' || currentUser.role === 'Administrador');
 
   return (
     <div className="p-6 bg-white shadow-md p-4 rounded text-black min-h-[85vh] max-h-[90vh]">
       {canCreateFolders && (
         <div className="flex mb-4 gap-x-4">
           <CreateFolder 
-            newFolderName={newFolderName} 
-            setNewFolderName={setNewFolderName} 
+            newFolderName={newFolderName} // Pasar el estado del nombre de la nueva carpeta
+            setNewFolderName={setNewFolderName} // Pasar la función de actualización del nombre
             triggerUpdate={triggerUpdate} 
           />
-          <UploadFile 
-            folders={folders.filter(folder => folder.state !== 'inactivo')} // Solo carpetas activas
-            triggerUpdate={triggerUpdate} 
-          />
+          <UploadFile folders={folders.filter(folder => folder.state === 'activo')} triggerUpdate={triggerUpdate} />
         </div>
       )}
 
-      {/* Botones para alternar entre vistas solo para administradores y gerencia */}
       {canCreateFolders && (
         <div className="flex gap-x-4 mb-4">
           <button
@@ -81,28 +81,12 @@ const Inventory = () => {
         </div>
       )}
 
-      {/* Mostrar lista según el rol y el botón seleccionado */}
-      {viewActive ? (
-        <div>
-          <h2 className="text-xl font-bold mb-4">Carpetas Activas</h2>
-          <FolderList 
-            folders={folders.filter(folder => folder.state === 'activo')} 
-            files={files.filter(file => file.state === 'activo')} 
-            stateFilter="activo" 
-            triggerUpdate={triggerUpdate}
-          />
-        </div>
-      ) : canCreateFolders ? (
-        <div>
-          <h2 className="text-xl font-bold mb-4">Carpetas Inactivas</h2>
-          <FolderList 
-            folders={folders.filter(folder => folder.state === 'inactivo')} 
-            files={files.filter(file => file.state === 'inactivo')} 
-            stateFilter="inactivo" 
-            triggerUpdate={triggerUpdate}
-          />
-        </div>
-      ) : null /* Si no es admin/gerencia, no mostrar inactivas */}
+      {/* Mostrar lista de carpetas */}
+      {viewActive || !canCreateFolders ? (
+        <FolderList folders={folders} files={files} stateFilter="activo" triggerUpdate={triggerUpdate} />
+      ) : (
+        <FolderList folders={folders} files={files} stateFilter="inactivo" triggerUpdate={triggerUpdate} />
+      )}
     </div>
   );
 };

@@ -78,7 +78,7 @@ const Home = () => {
               {!isLoadingPermissions && permissions.users && activeContent === 'Usuarios' && <Users />}
               {!isLoadingPermissions && permissions.clients && activeContent === 'Clientes' && <Clients />}
               {!isLoadingPermissions && permissions.roles && activeContent === 'Roles' && <Roles />}
-              {!isLoadingPermissions && permissions.roles && activeContent === 'Inventario' && <Inventory />}
+              {!isLoadingPermissions && permissions.inventory && activeContent === 'Inventario' && <Inventory />}
             </Suspense>
           </div>
         </main>

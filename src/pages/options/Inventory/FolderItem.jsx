@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import FileItem from './FileItem'; // Componente de los archivos
 import { FaChevronRight, FaChevronDown } from 'react-icons/fa';
 import { doc, updateDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../../../connection/firebase';
-import { useAuth } from '../../../context/AuthContext';
 import { getStorage, ref, deleteObject, listAll } from 'firebase/storage'; // Para listar y eliminar objetos en Firebase Storage
+import { useAuth } from '../../../context/AuthContext';
+import { db } from '../../../connection/firebase';
 
 const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
   const { currentUser } = useAuth(); // Obtener el usuario actual
@@ -12,9 +12,7 @@ const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
   const storage = getStorage();
 
   // Filtrar los archivos según la carpeta y el estado del archivo
-  const filteredFiles = files.filter(
-    file => file.folder === folder.name && file.state === stateFilter
-  );
+  const filteredFiles = files.filter(file => file.folder === folder.name && file.state === stateFilter);
 
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -26,14 +24,14 @@ const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
       const folderRef = doc(db, 'folders', folder.id);
       await updateDoc(folderRef, { state: 'inactivo' });
 
-      // Actualizar el estado de los archivos de la carpeta
+      // Cambiar el estado de los archivos a "inactivo"
       const folderFiles = files.filter(file => file.folder === folder.name);
-      folderFiles.forEach(async (file) => {
+      folderFiles.forEach(async file => {
         const fileRef = doc(db, 'files', file.id);
         await updateDoc(fileRef, { state: 'inactivo' });
       });
 
-      triggerUpdate(); // Actualizar la lista
+      triggerUpdate();
     } catch (error) {
       console.error('Error al cambiar el estado de la carpeta y archivos:', error);
     }
@@ -52,12 +50,11 @@ const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
         await deleteObject(itemRef);
       });
 
-      // Esperar a que todos los archivos se eliminen
       await Promise.all(deleteFilePromises);
 
       // Eliminar los archivos de Firestore
       const folderFiles = files.filter(file => file.folder === folder.name);
-      folderFiles.forEach(async (file) => {
+      folderFiles.forEach(async file => {
         const fileRef = doc(db, 'files', file.id);
         await deleteDoc(fileRef);
       });
@@ -66,7 +63,7 @@ const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
       const folderRef = doc(db, 'folders', folder.id);
       await deleteDoc(folderRef);
 
-      triggerUpdate(); // Actualizar la lista
+      triggerUpdate();
     } catch (error) {
       console.error('Error al eliminar completamente la carpeta y archivos:', error);
     }
@@ -81,7 +78,7 @@ const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
 
       // Recuperar todos los archivos asociados a la carpeta
       const folderFiles = files.filter(file => file.folder === folder.name);
-      folderFiles.forEach(async (file) => {
+      folderFiles.forEach(async file => {
         const fileRef = doc(db, 'files', file.id);
         await updateDoc(fileRef, { state: 'activo' });
       });
@@ -102,24 +99,15 @@ const FolderItem = ({ folder, files, stateFilter, triggerUpdate }) => {
         {currentUser.role === 'Gerencia' || currentUser.role === 'Administrador' ? (
           <div>
             {folder.state === 'activo' ? (
-              <button
-                onClick={handleDeleteFolder}
-                className="bg-red-500 text-white px-2 py-1 rounded mr-2"
-              >
+              <button onClick={handleDeleteFolder} className="bg-red-500 text-white px-2 py-1 rounded mr-2">
                 Eliminar
               </button>
             ) : (
               <>
-                <button
-                  onClick={handleRecoverFolder}
-                  className="bg-yellow-500 text-white px-2 py-1 rounded mr-2"
-                >
+                <button onClick={handleRecoverFolder} className="bg-yellow-500 text-white px-2 py-1 rounded mr-2">
                   Recuperar
                 </button>
-                <button
-                  onClick={handlePermanentDeleteFolder}
-                  className="bg-red-700 text-white px-2 py-1 rounded"
-                >
+                <button onClick={handlePermanentDeleteFolder} className="bg-red-700 text-white px-2 py-1 rounded">
                   Eliminar Completamente
                 </button>
               </>

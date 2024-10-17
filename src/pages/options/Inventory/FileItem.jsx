@@ -13,7 +13,7 @@ const FileItem = ({ file, triggerUpdate }) => {
     try {
       const fileRef = doc(db, 'files', file.id);
       await updateDoc(fileRef, { state: 'inactivo' });
-      triggerUpdate();
+      triggerUpdate(); // Actualizar la lista
     } catch (error) {
       console.error('Error al marcar archivo como inactivo:', error);
     }
@@ -22,12 +22,15 @@ const FileItem = ({ file, triggerUpdate }) => {
   // Función para eliminar definitivamente el archivo
   const handlePermanentDelete = async () => {
     try {
+      // Eliminar de Firestore
       const fileRef = doc(db, 'files', file.id);
       await deleteDoc(fileRef);
 
+      // Eliminar del Storage
       const fileStorageRef = ref(storage, `${file.folder}/${file.name}`);
       await deleteObject(fileStorageRef);
-      triggerUpdate();
+
+      triggerUpdate(); // Actualizar la lista
     } catch (error) {
       console.error('Error al eliminar archivo permanentemente:', error);
     }
@@ -38,7 +41,7 @@ const FileItem = ({ file, triggerUpdate }) => {
     try {
       const fileRef = doc(db, 'files', file.id);
       await updateDoc(fileRef, { state: 'activo' });
-      triggerUpdate();
+      triggerUpdate(); // Actualizar la lista
     } catch (error) {
       console.error('Error al recuperar el archivo:', error);
     }

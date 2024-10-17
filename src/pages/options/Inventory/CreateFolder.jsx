@@ -14,33 +14,22 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
       return;
     }
 
-    const normalizedFolderName = newFolderName.trim().toLowerCase();
-
     // Verificar si el usuario tiene el campo 'id'
     if (!currentUser || !currentUser.id) {
       alert('Error: No se pudo autenticar al usuario. Inicia sesión nuevamente.');
       return;
     }
 
+    const folderPath = `${newFolderName.trim()}/.keep`; // Añadir .keep al final para simular la carpeta
+    const folderRef = ref(storage, folderPath);
+    const currentDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
+
     try {
-      // Comprobar si ya existe una carpeta con el mismo nombre
-      const foldersCollectionRef = collection(db, 'folders');
-      const existingFoldersSnapshot = await getDocs(foldersCollectionRef);
-      const existingFolders = existingFoldersSnapshot.docs.map(doc => doc.data().name.toLowerCase());
-
-      if (existingFolders.includes(normalizedFolderName)) {
-        alert('Error: Ya existe una carpeta con ese nombre.');
-        return;
-      }
-
-      const folderPath = `${normalizedFolderName}/.keep`; // Añadir .keep al final para simular la carpeta
-      const folderRef = ref(storage, folderPath);
-      const currentDate = new Date().toISOString().split('T')[0]; // Formato YYYY-MM-DD
-
       // Crear archivo .keep en Firebase Storage para simular una carpeta
       await uploadBytes(folderRef, new Blob([''], { type: 'text/plain' })); // Subir archivo vacío .keep
 
       // Obtener el siguiente ID disponible para la carpeta
+      const foldersCollectionRef = collection(db, 'folders');
       const folderQuery = query(foldersCollectionRef, orderBy('idFolder', 'desc')); // Ordenar por 'idFolder'
       const folderSnapshot = await getDocs(folderQuery);
       let nextId = 1;
@@ -65,7 +54,7 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
 
       await setDoc(doc(db, 'folders', idFolder), folderData);
 
-      setNewFolderName('');
+      setNewFolderName(''); // Limpiar el campo de entrada
       triggerUpdate(); // Señalizamos la actualización
     } catch (error) {
       console.error('Error al crear la carpeta:', error);
