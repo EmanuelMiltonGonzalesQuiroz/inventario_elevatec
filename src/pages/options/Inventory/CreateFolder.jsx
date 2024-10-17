@@ -63,7 +63,7 @@ const CreateFolder = ({ newFolderName, setNewFolderName, triggerUpdate }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-black mb-4">Crear Nueva Tipo</h2>
+      <h2 className="text-xl font-bold text-black mb-4">Crear Nuevo Tipo</h2>
       <input
         type="text"
         value={newFolderName}

@@ -78,7 +78,7 @@ const UploadFile = ({ triggerUpdate, folders }) => {
         onChange={(e) => setSelectedFolder(e.target.value)}
         className="mb-2 p-2 border border-gray-400 rounded w-full"
       >
-        <option value="" disabled>Seleccionar Carpeta</option>
+        <option value="" disabled>Seleccionar Tipo</option>
         {folders.map((folder, index) => (
           <option key={index} value={folder.id}>
             {folder.name}
