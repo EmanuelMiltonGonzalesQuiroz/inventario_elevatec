@@ -91,6 +91,7 @@ export const permissionTranslations = {
   profile: 'Perfil',
   roles: 'Roles',
   inventory: 'Documento',
+  images: 'Imagenes',
 };
 
 

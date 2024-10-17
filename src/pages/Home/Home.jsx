@@ -5,7 +5,9 @@ import { useAuth } from '../../context/AuthContext';
 import { getDoc, doc } from 'firebase/firestore';
 import { db } from '../../connection/firebase';
 import Inventory from '../options/Inventory/Inventory';
-// Lazy loading for new components
+import Images from '../options/Images/Images'; // Nuevo componente para gestionar imágenes
+
+// Lazy loading para nuevos componentes
 const Users = lazy(() => import('../options/Users/Users'));
 const Clients = lazy(() => import('../options/Clients/Clients'));
 const Roles = lazy(() => import('../options/Roles/Roles'));
@@ -42,14 +44,12 @@ const Home = () => {
   }, [loadPermissions]);
 
   useEffect(() => {
-    // Configurar el temporizador para cerrar sesión automáticamente después de una hora
     if (currentUser) {
       const timer = setTimeout(() => {
-        logout(); // Cerrar la sesión automáticamente después de una hora
-        window.location.href = '/login'; // Redirigir al login
-      }, 3600000); // 3600000 milisegundos = 1 hora
-
-      return () => clearTimeout(timer); // Limpiar el temporizador si el componente se desmonta
+        logout();
+        window.location.href = '/login';
+      }, 3600000); // 1 hora
+      return () => clearTimeout(timer);
     }
   }, [currentUser, logout]);
 
@@ -63,15 +63,15 @@ const Home = () => {
   };
 
   return (
-    <div className="flex flex-col h-screen sm:overflow-auto overflow-y-hidden">  {/* Limitar desbordamiento solo en el eje y */}
+    <div className="flex flex-col h-screen sm:overflow-auto overflow-y-hidden">
       <Header className="h-[10%] flex-shrink-0" />
-      <div className="flex flex-grow "> {/* Control del desbordamiento solo en el eje y */}
+      <div className="flex flex-grow">
         <Sidebar
           activeContent={activeContent}
           setActiveContent={setActiveContent}
           permissions={isLoadingPermissions ? temporaryPermissions : permissions}
         />
-        <main className="flex-grow bg-gray-100 p-6  min-w-[80vh]"> {/* Permitir que el contenido principal se desplace en pantallas grandes */}
+        <main className="flex-grow bg-gray-100 p-6 min-w-[80vh]">
           <div className="w-full">
             <Suspense fallback={<div>Loading...</div>}>
               {(isLoadingPermissions || permissions.profile) && activeContent === 'Perfil' && <Profile />}
@@ -79,14 +79,13 @@ const Home = () => {
               {!isLoadingPermissions && permissions.clients && activeContent === 'Clientes' && <Clients />}
               {!isLoadingPermissions && permissions.roles && activeContent === 'Roles' && <Roles />}
               {!isLoadingPermissions && permissions.inventory && activeContent === 'Inventario' && <Inventory />}
+              {!isLoadingPermissions && permissions.images && activeContent === 'Imágenes' && <Images />} {/* Nueva opción para Imágenes */}
             </Suspense>
           </div>
         </main>
       </div>
     </div>
   );
-  
-  
 };
 
 export default Home;

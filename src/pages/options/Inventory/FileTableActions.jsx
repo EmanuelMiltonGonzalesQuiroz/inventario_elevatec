@@ -12,7 +12,9 @@ const FileTableActions = ({ file, folder, triggerUpdate }) => {
   const handleDelete = async () => {
     try {
       const fileRef = doc(db, 'files', file.id);
-      await updateDoc(fileRef, { state: 'inactivo' });
+      await updateDoc(fileRef, { 
+        state: 'inactivo',
+        eliminadoPor: currentUser });
       triggerUpdate(); // Actualizar la lista
     } catch (error) {
       console.error('Error al marcar archivo como inactivo:', error);

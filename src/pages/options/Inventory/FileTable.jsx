@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import FileTableBody from './FileTableBody';
 import FileTableFilters from './FileTableFilters';
 
-const FileTable = ({ folder, files, triggerUpdate }) => {
+const FileTable = ({ folder, files, triggerUpdate, stateFilter }) => {
   const [filteredFiles, setFilteredFiles] = useState(files);
 
   // Actualizar los archivos filtrados cuando cambien los archivos o la carpeta seleccionada
@@ -25,7 +25,7 @@ const FileTable = ({ folder, files, triggerUpdate }) => {
       <FileTableFilters onFilterChange={handleFilterChange} />
 
       {/* Tabla */}
-      <FileTableBody files={filteredFiles} folder={folder} triggerUpdate={triggerUpdate} />
+      <FileTableBody files={filteredFiles} folder={folder} triggerUpdate={triggerUpdate} stateFilter={stateFilter}/>
     </div>
   );
 };

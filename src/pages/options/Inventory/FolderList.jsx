@@ -69,7 +69,7 @@ const FolderList = ({ folders, files, stateFilter, triggerUpdate }) => {
       {/* Columna de tabla de archivos */}
       <div className="w-full bg-white p-4 overflow-auto">
         {selectedFolder ? (
-          <FileTable folder={selectedFolder} files={filteredFiles} triggerUpdate={triggerUpdate} />
+          <FileTable folder={selectedFolder} files={filteredFiles} triggerUpdate={triggerUpdate} stateFilter={stateFilter}/>
         ) : (
           <div className="text-center text-gray-500">Selecciona una carpeta para ver sus archivos</div>
         )}
