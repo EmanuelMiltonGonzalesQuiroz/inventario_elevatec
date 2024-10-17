@@ -29,14 +29,16 @@ const FolderList = ({ folders, files, stateFilter, triggerUpdate }) => {
 
   // Filtrar carpetas según el estado proporcionado (activo/inactivo)
   const filteredFolders = folders.filter(folder => {
+    const hasActiveFiles = files.some(file => file.folder === folder.name && file.state === 'activo');
+    const hasInactiveFiles = files.some(file => file.folder === folder.name && file.state === 'inactivo');
+
     if (stateFilter === 'activo') {
-      // Mostrar la carpeta en activos solo si la carpeta está activa y tiene al menos un archivo activo
-      const hasActiveFiles = files.some(file => file.folder === folder.name && file.state === 'activo');
-      return folder.state === 'activo' && hasActiveFiles;
+      // Mostrar la carpeta en activos si la carpeta está activa, o si tiene al menos un archivo activo,
+      // o si no tiene archivos pero está activa.
+      return folder.state === 'activo' && (hasActiveFiles || !files.some(file => file.folder === folder.name));
     } else if (stateFilter === 'inactivo') {
-      // Mostrar la carpeta en inactivos si la carpeta está inactiva
-      // O si tiene archivos inactivos (incluso si la carpeta está activa)
-      const hasInactiveFiles = files.some(file => file.folder === folder.name && file.state === 'inactivo');
+      // Mostrar la carpeta en inactivos si la carpeta está inactiva,
+      // o si tiene archivos inactivos (incluso si la carpeta está activa).
       return folder.state === 'inactivo' || hasInactiveFiles;
     }
     return false;
