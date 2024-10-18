@@ -2,18 +2,20 @@ import React, { useState } from 'react';
 import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db } from '../../../connection/firebase';
 import { doc, setDoc, query, orderBy, getDocs, collection } from 'firebase/firestore';
-import { useAuth } from '../../../context/AuthContext'; 
+import { useAuth } from '../../../context/AuthContext';
+import CustomSelectUsers from '../../../components/UI/CustomSelectUsers'; // Importar el nuevo componente
 
 const UploadFile = ({ triggerUpdate, folders }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileName, setFileName] = useState(''); // Estado para el nombre del archivo
   const [selectedFolder, setSelectedFolder] = useState('');
+  const [selectedClient, setSelectedClient] = useState(null); // Nuevo estado para el cliente
   const [isUploading, setIsUploading] = useState(false); // Estado para mostrar carga
   const storage = getStorage();
   const { currentUser } = useAuth();
 
   const handleFileUpload = async () => {
-    if (selectedFile && selectedFolder && fileName) {
+    if (selectedFile && selectedFolder && fileName && selectedClient) {
       setIsUploading(true); // Mostrar spinner de carga
 
       // Encontrar el folder seleccionado por su ID
@@ -50,21 +52,23 @@ const UploadFile = ({ triggerUpdate, folders }) => {
           idFolder: selectedFolderObj.id,
           uploadedAt: currentDate,
           uploadedBy: currentUser.id,
+          uploadedFor: selectedClient.value, // Guardar el cliente seleccionado
           state: "activo",
           url: downloadURL
         });
 
         setSelectedFile(null);
-        setSelectedFolder(''); // Restablecer la selección de la Tipo
+        setSelectedFolder(''); // Restablecer la selección de la carpeta
         setFileName(''); // Restablecer el nombre del archivo
-        triggerUpdate(); // Señalizamos la actualización
+        setSelectedClient(null); // Restablecer el cliente seleccionado
+        triggerUpdate(); // Señalizar la actualización
       } catch (error) {
         console.error('Error al subir el archivo:', error);
       } finally {
         setIsUploading(false); // Ocultar spinner de carga
       }
     } else {
-      alert('Por favor selecciona un archivo, una carpeta y proporciona un nombre de archivo.');
+      alert('Por favor selecciona un archivo, una carpeta, un cliente y proporciona un nombre de archivo.');
     }
   };
 
@@ -78,7 +82,7 @@ const UploadFile = ({ triggerUpdate, folders }) => {
         onChange={(e) => setSelectedFolder(e.target.value)}
         className="mb-2 p-2 border border-gray-400 rounded w-full"
       >
-        <option value="" disabled>Seleccionar Tipo</option>
+        <option value="" disabled>Seleccionar Carpeta</option>
         {folders.map((folder, index) => (
           <option key={index} value={folder.id}>
             {folder.name}
@@ -93,6 +97,14 @@ const UploadFile = ({ triggerUpdate, folders }) => {
         value={fileName}
         onChange={(e) => setFileName(e.target.value)}
         className="mb-2 p-2 border border-gray-400 rounded w-full"
+      />
+
+      {/* CustomSelectUsers para seleccionar cliente */}
+      <CustomSelectUsers
+        placeholder="Seleccionar Cliente"
+        onChange={setSelectedClient}
+        selectedValue={selectedClient}
+        role="Cliente" // Filtrar solo usuarios con rol de "Cliente"
       />
 
       {/* Input para seleccionar archivo */}

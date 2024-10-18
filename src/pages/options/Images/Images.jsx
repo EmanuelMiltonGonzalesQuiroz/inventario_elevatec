@@ -38,23 +38,25 @@ const Images = () => {
 
   return (
     <div className="p-6 bg-white shadow-md rounded text-black min-h-[85vh] max-h-[130vh]">
-        {canCreateFolders && (
+        {(canCreateFolders || currentUser.role==="Super Usuario") && (
             <div className="grid mb-4 gap-4">
                 <UploadImage triggerUpdate={triggerUpdate} /> 
-                <div className="flex gap-x-4 mb-4">
-                <button
-                    onClick={() => setViewActive(true)}
-                    className={`px-4 py-2 rounded ${viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
-                >
-                    Imagenes Activos
-                </button>
-                <button
-                    onClick={() => setViewActive(false)}
-                    className={`px-4 py-2 rounded ${!viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
-                >
-                    Imagenes Inactivos
-                </button>
+                {canCreateFolders && (
+                  <div className="flex gap-x-4 mb-4">
+                    <button
+                        onClick={() => setViewActive(true)}
+                        className={`px-4 py-2 rounded ${viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+                    >
+                        Imagenes Activas
+                    </button>
+                    <button
+                        onClick={() => setViewActive(false)}
+                        className={`px-4 py-2 rounded ${!viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
+                    >
+                        Imagenes Inactivas
+                    </button>
                 </div>
+                )}
             </div>
       )}
       {viewActive || !canCreateFolders ? (

@@ -44,7 +44,7 @@ const CustomSelectUsers = ({ placeholder, onChange, selectedValue, role = '' }) 
         });
 
         // Añadir una opción de placeholder al principio
-        setOptions([{ label: 'Seleccionar cliente', value: null }, ...optionsList]);
+        setOptions([{ label: 'Seleccionar', value: null }, ...optionsList]);
       } catch (error) {
         console.error('Error al obtener usuarios: ', error);
       }

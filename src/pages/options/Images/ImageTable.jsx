@@ -19,7 +19,7 @@ const ImageTable = ({ images, triggerUpdate, stateFilter }) => {
   };
 
   return (
-    <div className="min-h-[70vh] max-h-[80vh] overflow-auto">
+    <div className="min-h-[70vh] max-h-[70vh] overflow-auto">
       <h3 className="text-lg font-bold mb-2 ">Lista de Imágenes</h3>
         <ImageTableFilters onFilterChange={handleFilterChange} />
         <ImageTableBody images={filteredImages} triggerUpdate={triggerUpdate} stateFilter={stateFilter}/>

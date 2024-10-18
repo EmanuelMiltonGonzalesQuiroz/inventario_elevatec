@@ -73,7 +73,7 @@ const ImageTableActions = ({ image, triggerUpdate }) => {
             onClick={handlePermanentDelete} 
             className="bg-red-700 hover:bg-red-800 text-white font-bold w-full py-2 px-3 rounded"
           >
-            Eliminar Definitivamente
+            Eliminar P.
           </button>
         </>
       )}

@@ -8,15 +8,19 @@ const UploadImage = ({ triggerUpdate }) => {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageName, setImageName] = useState('');
   const [imageDescription, setImageDescription] = useState('');
+  const [uploadedFileName, setUploadedFileName] = useState(''); // Estado para el nombre del archivo subido
   const [isUploading, setIsUploading] = useState(false);
   const storage = getStorage();
   const { currentUser } = useAuth();
 
   const handleImageUpload = async () => {
-    if (selectedImage && imageName && imageDescription) {
+    const trimmedName = imageName.trim();
+    const trimmedDescription = imageDescription.trim();
+
+    if (selectedImage && trimmedName && trimmedDescription) {
       setIsUploading(true);
 
-      const imageRef = ref(storage, `Imagenes/${imageName}`);
+      const imageRef = ref(storage, `Imagenes/${trimmedName}`);
 
       try {
         await uploadBytes(imageRef, selectedImage);
@@ -40,18 +44,25 @@ const UploadImage = ({ triggerUpdate }) => {
         // Guardar la imagen en Firestore
         await setDoc(doc(db, 'images', imageId), {
           idImage: imageId,
-          name: imageName,
-          description: imageDescription,
+          name: trimmedName,
+          description: trimmedDescription,
           uploadedAt: currentDate,
           uploadedBy: currentUser.id,
           state: 'activo',
           url: downloadURL,
         });
 
+        // Limpiar el estado después de la subida
+        setUploadedFileName(selectedImage.name); // Guardar el nombre del archivo subido
         setSelectedImage(null);
         setImageName('');
         setImageDescription('');
         triggerUpdate();
+
+        // Limpiar el nombre subido después de unos segundos
+        setTimeout(() => {
+          setUploadedFileName('');
+        }, 3000); // 3 segundos para mostrar el nombre antes de limpiarlo
       } catch (error) {
         console.error('Error al subir la imagen:', error);
       } finally {
@@ -84,11 +95,19 @@ const UploadImage = ({ triggerUpdate }) => {
         onChange={(e) => setSelectedImage(e.target.files[0])}
         className="mb-2 p-2 border border-gray-400 rounded w-full"
       />
+
+      {/* Mostrar el nombre del archivo subido */}
+      {uploadedFileName && (
+        <div className="text-sm text-gray-500 mb-2">
+          <strong>Archivo subido:</strong> {uploadedFileName}
+        </div>
+      )}
+
       <button
         onClick={handleImageUpload}
         className="bg-green-500 text-white px-4 py-2 rounded w-full flex justify-center items-center"
         disabled={isUploading}
-      > 
+      >
         {isUploading ? (
           <div className="loader"></div>
         ) : (

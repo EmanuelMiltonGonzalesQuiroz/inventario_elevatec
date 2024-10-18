@@ -53,7 +53,7 @@ const Inventory = () => {
 
   return (
     <div className="p-6 bg-white shadow-md p-4 rounded text-black min-h-[85vh] max-h-[130vh]">
-      {canCreateFolders && (
+      {(canCreateFolders || currentUser.role==="Super Usuario") && (
         <div className="flex mb-4 gap-x-4">
           <CreateFolder 
             newFolderName={newFolderName} 
@@ -70,13 +70,13 @@ const Inventory = () => {
             onClick={() => setViewActive(true)}
             className={`px-4 py-2 rounded ${viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
           >
-            Tipos Activos
+            Documentos 
           </button>
           <button
             onClick={() => setViewActive(false)}
             className={`px-4 py-2 rounded ${!viewActive ? 'bg-blue-500 text-white' : 'bg-gray-200 text-black'}`}
           >
-            Tipos Inactivos
+            Documentos eliminados
           </button>
         </div>
       )}

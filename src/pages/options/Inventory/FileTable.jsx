@@ -11,9 +11,10 @@ const FileTable = ({ folder, files, triggerUpdate, stateFilter }) => {
   }, [files]);
 
   const handleFilterChange = (filterType, filterValue) => {
-    const filtered = files.filter(file =>
-      file[filterType].toLowerCase().includes(filterValue.toLowerCase())
-    );
+    const filtered = files.filter(file => {
+      const fileValue = file[filterType] ? file[filterType].toString().toLowerCase() : ''; // Asegurarse de que sea una cadena
+      return fileValue.includes(filterValue.toLowerCase());
+    });
     setFilteredFiles(filtered);
   };
 
@@ -25,7 +26,7 @@ const FileTable = ({ folder, files, triggerUpdate, stateFilter }) => {
       <FileTableFilters onFilterChange={handleFilterChange} />
 
       {/* Tabla */}
-      <FileTableBody files={filteredFiles} folder={folder} triggerUpdate={triggerUpdate} stateFilter={stateFilter}/>
+      <FileTableBody files={filteredFiles} folder={folder} triggerUpdate={triggerUpdate} stateFilter={stateFilter} />
     </div>
   );
 };

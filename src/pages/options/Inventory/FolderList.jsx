@@ -48,7 +48,7 @@ const FolderList = ({ folders, files, stateFilter, triggerUpdate }) => {
     <div className="w-full min-h-[70vh] max-h-[80vh] flex bg-gray-200 rounded shadow-md">
       {/* Columna de carpetas */}
       <div className="min-w-[15vw] max-w-[15vw] bg-gray-100 p-4 overflow-auto">
-        <h2 className="text-lg font-bold mb-4">Carpetas</h2>
+        <h2 className="text-lg font-bold mb-4">Tipos</h2>
         <ul className="list-none">
           {filteredFolders.length > 0 ? (
             filteredFolders.map(folder => (
@@ -61,7 +61,7 @@ const FolderList = ({ folders, files, stateFilter, triggerUpdate }) => {
               </li>
             ))
           ) : (
-            <p>No hay carpetas disponibles</p>
+            <p>No hay Tipos disponibles</p>
           )}
         </ul>
       </div>
@@ -71,7 +71,7 @@ const FolderList = ({ folders, files, stateFilter, triggerUpdate }) => {
         {selectedFolder ? (
           <FileTable folder={selectedFolder} files={filteredFiles} triggerUpdate={triggerUpdate} stateFilter={stateFilter}/>
         ) : (
-          <div className="text-center text-gray-500">Selecciona una carpeta para ver sus archivos</div>
+          <div className="text-center text-gray-500">Selecciona un tipo para ver sus archivos</div>
         )}
       </div>
     </div>
